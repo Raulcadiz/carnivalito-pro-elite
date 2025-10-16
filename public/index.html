@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carnivalito Pro Elite 3.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Fredoka', system-ui, sans-serif;
+            background: linear-gradient(135deg, #003366 0%, #001122 50%, #4A148C 100%);
+            min-height: 100vh;
+        }
+        
+        .chat-container {
+            height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .message-bubble {
+            animation: slideInMessage 0.4s ease-out;
+        }
+        
+        @keyframes slideInMessage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="text-white">
+    
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-yellow-400 via-red-500 to-blue-900 p-6 text-center">
+        <div class="flex items-center justify-center mb-4">
+            <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mr-4">⚽</div>
+            <h1 class="text-3xl font-bold">Carnivalito Pro Elite 3.0</h1>
+            <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center ml-4">🎭</div>
+        </div>
+        <p class="text-sm opacity-90 mb-4">Asistente Carnavalero con IA Avanzada</p>
+        
+        <!-- Tabs -->
+        <div class="flex justify-center gap-2 text-xs">
+            <button class="tab-button active px-3 py-1 rounded-full font-semibold bg-white bg-opacity-20" data-tab="chat">💬 Chat</button>
+            <button class="tab-button px-3 py-1 rounded-full font-semibold bg-white bg-opacity-20" data-tab="poetry">📝 Poesía</button>
+            <button class="tab-button px-3 py-1 rounded-full font-semibold bg-white bg-opacity-20" data-tab="voice">🎤 Voz</button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6 max-w-4xl">
+        
+        <!-- Chat Tab -->
+        <div id="chat-tab" class="tab-content active">
+            <div class="bg-black bg-opacity-30 rounded-2xl p-6 backdrop-blur-lg border border-yellow-400">
+                <div id="chat-container" class="chat-container mb-4">
+                    <div class="message-bubble bg-purple-800 max-w-85% p-4 rounded-3xl mb-4 text-white">
+                        <div class="font-bold mb-2">¡Viva er Cádiz y viva er Carnaval! 🎉⚽</div>
+                        <div class="mb-3">Soy <em>Carnivalito Pro Elite 3.0</em>, tu asistente carnavalero de nueva generación.</div>
+                        <div class="text-sm space-y-1">
+                            <div>🧠 <strong>IA Avanzada:</strong> Análisis contextual y aprendizaje adaptativo</div>
+                            <div>🎤 <strong>Voz Realista:</strong> Síntesis con personalidad gaditana</div>
+                            <div>📝 <strong>Análisis Poético:</strong> Métricas, rimas y estilo carnavalero</div>
+                        </div>
+                        <div class="mt-3 text-sm opacity-90"><em>¡Pregúntame lo que quieras, pisha!</em></div>
+                    </div>
+                </div>
+                
+                <div id="typing-indicator" class="text-yellow-400 text-sm text-center py-2" style="display: none;">
+                    🎭 Carnivalito está pensando...
+                </div>
+                
+                <div class="flex gap-3">
+                    <input 
+                        type="text" 
+                        id="message-input" 
+                        placeholder="Escribe tu mensaje carnavalero..." 
+                        class="flex-1 bg-white bg-opacity-10 text-white border-2 border-yellow-400 rounded-full px-6 py-3 focus:outline-none placeholder-gray-300"
+                        maxlength="1000"
+                    >
+                    <button id="send-btn" class="bg-yellow-500 text-blue-900 px-6 py-3 rounded-full font-bold">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <button id="voice-btn" class="bg-red-600 text-white w-12 h-12 rounded-full flex items-center justify-center">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Poetry Tab -->
+        <div id="poetry-tab" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-black bg-opacity-30 rounded-2xl p-6 backdrop-blur-lg border border-yellow-400">
+                    <h3 class="text-xl font-bold mb-4 text-yellow-400">📝 Analizador Poético</h3>
+                    <textarea 
+                        id="poetry-text" 
+                        placeholder="Pega aquí tu copla o poema..."
+                        class="w-full h-40 bg-white bg-opacity-10 text-white border border-yellow-400 rounded-lg p-4 resize-none focus:outline-none placeholder-gray-300"
+                    ></textarea>
+                    <button id="analyze-btn" class="bg-yellow-500 text-blue-900 w-full py-2 rounded-lg font-bold mt-4">
+                        🔍 Analizar Métricas
+                    </button>
+                    
+                    <div id="analysis-results" class="mt-6 hidden">
+                        <h4 class="font-bold text-yellow-400 mb-3">Resultados:</h4>
+                        <div id="analysis-content" class="bg-white bg-opacity-10 rounded-lg p-4 text-sm"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-black bg-opacity-30 rounded-2xl p-6 backdrop-blur-lg border border-yellow-400">
+                    <h3 class="text-xl font-bold mb-4 text-yellow-400">✨ Generador de Poesía</h3>
+                    
+                    <div class="space-y-4">
+                        <input 
+                            type="text" 
+                            id="poetry-theme" 
+                            placeholder="Tema (ej: carnaval, amor, Cádiz...)"
+                            class="w-full bg-white bg-opacity-10 text-white border border-yellow-400 rounded-lg px-4 py-2 focus:outline-none placeholder-gray-300"
+                        >
+                        
+                        <select id="poetry-style" class="w-full bg-white bg-opacity-10 text-white border border-yellow-400 rounded-lg px-4 py-2">
+                            <option value="copla">Copla (4 versos octosílabos)</option>
+                            <option value="chirigota">Chirigota (humorística)</option>
+                            <option value="comparsa">Comparsa (lírica)</option>
+                            <option value="tango">Tango flamenco</option>
+                        </select>
+                        
+                        <button id="generate-poetry-btn" class="bg-yellow-500 text-blue-900 w-full py-3 rounded-lg font-bold">
+                            🎭 Generar Poesía
+                        </button>
+                    </div>
+                    
+                    <div id="generated-poetry" class="mt-6 hidden">
+                        <h4 class="font-bold text-yellow-400 mb-3">Poesía Generada:</h4>
+                        <div id="poetry-content" class="bg-white bg-opacity-10 rounded-lg p-4 font-mono text-sm whitespace-pre-line"></div>
+                        <button id="speak-poetry-btn" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-sm mt-3">
+                            🎤 Recitar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Voice Tab -->
+        <div id="voice-tab" class="tab-content">
+            <div class="bg-black bg-opacity-30 rounded-2xl p-6 backdrop-blur-lg border border-yellow-400">
+                <h3 class="text-xl font-bold mb-4 text-yellow-400">🎤 Síntesis de Voz</h3>
+                
+                <textarea 
+                    id="voice-text" 
+                    placeholder="¡Viva er Carnaval de Cádiz, pisha!"
+                    class="w-full h-24 bg-white bg-opacity-10 text-white border border-yellow-400 rounded-lg p-4 resize-none focus:outline-none placeholder-gray-300 mb-4"
+                ></textarea>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Velocidad:</label>
+                        <input type="range" id="voice-speed" min="0.5" max="2" step="0.1" value="1" class="w-full">
+                        <div class="text-center text-xs text-gray-300">
+                            <span id="speed-value">1.0</span>x
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Tono:</label>
+                        <input type="range" id="voice-pitch" min="-10" max="10" step="0.5" value="0" class="w-full">
+                        <div class="text-center text-xs text-gray-300">
+                            <span id="pitch-value">0.0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button id="synthesize-btn" class="bg-yellow-500 text-blue-900 flex-1 py-3 rounded-lg font-bold">
+                        🔊 Sintetizar Voz
+                    </button>
+                    <button id="test-voice-btn" class="bg-purple-600 text-white px-4 py-3 rounded-lg font-bold">
+                        🧪 Prueba
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="notification" class="notification">
+        <span id="notification-text"></span>
+    </div>
+
+    <script>
+        class CarnivalitoApp {
+            constructor() {
+                this.userId = 'user_' + Date.now();
+                this.initializeApp();
+                this.setupEventListeners();
+                this.initializeVoiceRecognition();
+            }
+            
+            initializeApp() {
+                console.log('🎭 Carnivalito Pro Elite 3.0 iniciado');
+                document.getElementById('message-input').focus();
+            }
+            
+            setupEventListeners() {
+                // Tab navigation
+                document.querySelectorAll('.tab-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        this.switchTab(e.target.dataset.tab);
+                    });
+                });
+                
+                // Events
+                document.getElementById('send-btn').addEventListener('click', () => this.sendMessage());
+                document.getElementById('message-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.sendMessage();
+                });
+                document.getElementById('voice-btn').addEventListener('click', () => this.toggleVoiceRecognition());
+                document.getElementById('analyze-btn').addEventListener('click', () => this.analyzePoetry());
+                document.getElementById('generate-poetry-btn').addEventListener('click', () => this.generatePoetry());
+                document.getElementById('speak-poetry-btn').addEventListener('click', () => this.speakPoetry());
+                document.getElementById('synthesize-btn').addEventListener('click', () => this.synthesizeVoice());
+                document.getElementById('test-voice-btn').addEventListener('click', () => this.testVoice());
+                
+                // Voice sliders
+                document.getElementById('voice-speed').addEventListener('input', (e) => {
+                    document.getElementById('speed-value').textContent = e.target.value;
+                });
+                document.getElementById('voice-pitch').addEventListener('input', (e) => {
+                    document.getElementById('pitch-value').textContent = e.target.value;
+                });
+            }
+            
+            switchTab(tabName) {
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active', 'bg-yellow-400', 'text-blue-900');
+                    btn.classList.add('bg-white', 'bg-opacity-20');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active', 'bg-yellow-400', 'text-blue-900');
+                
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            }
+            
+            async sendMessage() {
+                const input = document.getElementById('message-input');
+                const message = input.value.trim();
+                
+                if (!message) return;
+                
+                this.addMessage(message, true);
+                input.value = '';
+                this.showTyping(true);
+                
+                try {
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message,
+                            userId: this.userId,
+                            sessionId: 'session_' + Date.now()
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    this.showTyping(false);
+                    
+                    if (result.reply) {
+                        this.addMessage(result.reply, false);
+                        this.synthesizeResponse(result.reply);
+                    } else {
+                        this.addMessage('Error procesando mensaje. ¿Intentamos de nuevo, pisha?', false);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.showTyping(false);
+                    this.addMessage('Error de conexión. ¿Intentamos de nuevo, pisha?', false);
+                }
+            }
+            
+            async analyzePoetry() {
+                const text = document.getElementById('poetry-text').value.trim();
+                if (!text) {
+                    this.showNotification('Introduce un texto para analizar', 'warning');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/poetry/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text, userId: this.userId })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.displayAnalysisResults(result);
+                        this.showNotification('Análisis completado', 'success');
+                    }
+                } catch (error) {
+                    this.showNotification('Error en análisis', 'error');
+                }
+            }
+            
+            async generatePoetry() {
+                const theme = document.getElementById('poetry-theme').value.trim();
+                const style = document.getElementById('poetry-style').value;
+                
+                if (!theme) {
+                    this.showNotification('Introduce un tema', 'warning');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/poetry/generate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ theme, style, verses: 4, userId: this.userId })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        document.getElementById('poetry-content').textContent = result.poem;
+                        document.getElementById('generated-poetry').classList.remove('hidden');
+                        this.showNotification('Poesía generada', 'success');
+                    }
+                } catch (error) {
+                    this.showNotification('Error generando poesía', 'error');
+                }
+            }
+            
+            synthesizeVoice() {
+                const text = document.getElementById('voice-text').value.trim();
+                if (!text) {
+                    this.showNotification('Introduce texto para sintetizar', 'warning');
+                    return;
+                }
+                
+                const options = {
+                    speed: parseFloat(document.getElementById('voice-speed').value),
+                    pitch: parseFloat(document.getElementById('voice-pitch').value)
+                };
+                
+                this.synthesizeWithWebAPI(text, options);
+                this.showNotification('Audio sintetizado', 'success');
+            }
+            
+            synthesizeWithWebAPI(text, options = {}) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'es-ES';
+                    utterance.rate = options.speed || 1.0;
+                    utterance.pitch = options.pitch || 1.0;
+                    
+                    const voices = speechSynthesis.getVoices();
+                    const spanishVoice = voices.find(voice => voice.lang.includes('es'));
+                    if (spanishVoice) utterance.voice = spanishVoice;
+                    
+                    speechSynthesis.speak(utterance);
+                } else {
+                    this.showNotification('Síntesis no disponible', 'error');
+                }
+            }
+            
+            synthesizeResponse(text) {
+                try {
+                    const shortText = text.length > 200 ? text.substring(0, 200) + '...' : text;
+                    this.synthesizeWithWebAPI(shortText, { speed: 1.1 });
+                } catch (error) {
+                    console.log('Auto-synthesis falló:', error);
+                }
+            }
+            
+            testVoice() {
+                document.getElementById('voice-text').value = "¡Viva er Carnaval de Cádiz, pisha!";
+                this.synthesizeVoice();
+            }
+            
+            speakPoetry() {
+                const text = document.getElementById('poetry-content').textContent;
+                if (text) {
+                    this.synthesizeWithWebAPI(text, { speed: 0.9 });
+                }
+            }
+            
+            initializeVoiceRecognition() {
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    this.recognition = new SpeechRecognition();
+                    this.recognition.lang = 'es-ES';
+                    
+                    this.recognition.onresult = (event) => {
+                        const transcript = event.results[0][0].transcript;
+                        document.getElementById('message-input').value = transcript;
+                        if (event.results[0].isFinal) {
+                            this.sendMessage();
+                        }
+                    };
+                }
+            }
+            
+            toggleVoiceRecognition() {
+                if (this.recognition) {
+                    this.recognition.start();
+                } else {
+                    this.showNotification('Reconocimiento no disponible', 'error');
+                }
+            }
+            
+            addMessage(content, isUser) {
+                const container = document.getElementById('chat-container');
+                const div = document.createElement('div');
+                
+                div.className = `message-bubble ${isUser ? 'bg-blue-800 ml-auto' : 'bg-purple-800'} max-w-85% p-4 rounded-3xl mb-4 text-white`;
+                div.innerHTML = `
+                    <div>${content}</div>
+                    <div class="text-xs opacity-70 mt-2">${new Date().toLocaleTimeString()}</div>
+                `;
+                
+                container.appendChild(div);
+                container.scrollTop = container.scrollHeight;
+            }
+            
+            showTyping(show) {
+                document.getElementById('typing-indicator').style.display = show ? 'block' : 'none';
+            }
+            
+            displayAnalysisResults(result) {
+                const content = document.getElementById('analysis-content');
+                const analysis = result.analysis;
+                
+                content.innerHTML = `
+                    <div class="space-y-2">
+                        <div><strong>Versos:</strong> ${analysis.totalVerses}</div>
+                        <div><strong>Métrica:</strong> ${analysis.metrics?.pattern || 'N/A'}</div>
+                        <div><strong>Rima:</strong> ${analysis.rhyme?.type || 'N/A'}</div>
+                    </div>
+                `;
+                
+                document.getElementById('analysis-results').classList.remove('hidden');
+            }
+            
+            showNotification(message, type = 'info', duration = 3000) {
+                const notification = document.getElementById('notification');
+                const text = document.getElementById('notification-text');
+                
+                const colors = {
+                    success: 'bg-green-500 text-white',
+                    error: 'bg-red-500 text-white',
+                    warning: 'bg-yellow-500 text-black',
+                    info: 'bg-blue-500 text-white'
+                };
+                
+                notification.className = `notification ${colors[type]}`;
+                text.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => notification.classList.remove('show'), duration);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            new CarnivalitoApp();
+        });
+    </script>
+</body>
+</html>
