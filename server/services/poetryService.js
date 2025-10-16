@@ -6,7 +6,7 @@ class PoetryService {
     this.syllablePatterns = this.initializeSyllablePatterns();
     this.rhymeDatabase = this.initializeRhymeDatabase();
     this.carnavalMetrics = this.initializeCarnavalMetrics();
-    this.poeticDevices = this.initializePoetic Devices();
+    this.poeticDevices = this.initializePoeticDevices();
     this.andalusianPronunciation = this.initializeAndalusianPronunciation();
   }
 
@@ -65,7 +65,7 @@ class PoetryService {
     };
   }
 
-  initializePoetic Devices() {
+  initializePoeticDevices() {
     return {
       aliteration: /\b(\w)\w*\s+\1\w*/gi,
       metaphor: ['como', 'cual', 'semejante', 'parecido'],
@@ -116,7 +116,7 @@ class PoetryService {
           ...analysis,
           sentiment: this.analyzeSentiment(text),
           carnavalStyle: this.analyzeCarnavalStyle(verses),
-          poeticDevices: this.analyzePoetic Devices(text),
+          poeticDevices: this.analyzePoeticDevices(text),
           improvements: this.suggestImprovements(verses, metricAnalysis, rhymeAnalysis)
         };
       }

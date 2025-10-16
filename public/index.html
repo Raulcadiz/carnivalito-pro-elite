@@ -4,9 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carnivalito Pro Elite 3.0</title>
+    <!-- CSP para permitir fuentes, scripts y conexiones necesarias -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        font-src 'self' fonts.gstatic.com https://cdnjs.cloudflare.com;
+        script-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com 'unsafe-inline';
+        style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';
+        connect-src 'self' https://45.134.226.174:3001;
+        img-src 'self' data:;
+    ">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Favicon para evitar ERR_SSL_PROTOCOL_ERROR -->
+    <link rel="icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///wD///8A////AP///wD///8A////AP///wD///8A">
     
     <style>
         body {
@@ -74,7 +85,7 @@
         <div id="chat-tab" class="tab-content active">
             <div class="bg-black bg-opacity-30 rounded-2xl p-6 backdrop-blur-lg border border-yellow-400">
                 <div id="chat-container" class="chat-container mb-4">
-                    <div class="message-bubble bg-purple-800 max-w-85% p-4 rounded-3xl mb-4 text-white">
+                    <div class="message-bubble bg-purple-800 max-w-[85%] p-4 rounded-3xl mb-4 text-white">
                         <div class="font-bold mb-2">¡Viva er Cádiz y viva er Carnaval! 🎉⚽</div>
                         <div class="mb-3">Soy <em>Carnivalito Pro Elite 3.0</em>, tu asistente carnavalero de nueva generación.</div>
                         <div class="text-sm space-y-1">
@@ -264,13 +275,17 @@
                 const input = document.getElementById('message-input');
                 const message = input.value.trim();
                 
-                if (!message) return;
+                if (!message) {
+                    this.showNotification('Escribe un mensaje, pisha!', 'warning');
+                    return;
+                }
                 
                 this.addMessage(message, true);
                 input.value = '';
                 this.showTyping(true);
                 
                 try {
+                    // Usamos URL relativa para evitar problemas con el dominio
                     const response = await fetch('/api/chat', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -280,6 +295,10 @@
                             sessionId: 'session_' + Date.now()
                         })
                     });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Error en la API: ${response.status}`);
+                    }
                     
                     const result = await response.json();
                     this.showTyping(false);
@@ -292,9 +311,10 @@
                     }
                     
                 } catch (error) {
-                    console.error('Error:', error);
+                    console.error('Fetch error:', error.message);
                     this.showTyping(false);
-                    this.addMessage('Error de conexión. ¿Intentamos de nuevo, pisha?', false);
+                    this.addMessage('Error de conexión. Revisa el servidor o el certificado SSL, pisha.', false);
+                    this.showNotification('Error de conexión con el servidor', 'error');
                 }
             }
             
@@ -312,13 +332,20 @@
                         body: JSON.stringify({ text, userId: this.userId })
                     });
                     
+                    if (!response.ok) {
+                        throw new Error(`Error en la API: ${response.status}`);
+                    }
+                    
                     const result = await response.json();
                     
                     if (result.success) {
                         this.displayAnalysisResults(result);
                         this.showNotification('Análisis completado', 'success');
+                    } else {
+                        this.showNotification('Error en el análisis', 'error');
                     }
                 } catch (error) {
+                    console.error('Fetch error:', error.message);
                     this.showNotification('Error en análisis', 'error');
                 }
             }
@@ -339,14 +366,21 @@
                         body: JSON.stringify({ theme, style, verses: 4, userId: this.userId })
                     });
                     
+                    if (!response.ok) {
+                        throw new Error(`Error en la API: ${response.status}`);
+                    }
+                    
                     const result = await response.json();
                     
                     if (result.success) {
                         document.getElementById('poetry-content').textContent = result.poem;
                         document.getElementById('generated-poetry').classList.remove('hidden');
                         this.showNotification('Poesía generada', 'success');
+                    } else {
+                        this.showNotification('Error generando poesía', 'error');
                     }
                 } catch (error) {
+                    console.error('Fetch error:', error.message);
                     this.showNotification('Error generando poesía', 'error');
                 }
             }
@@ -374,11 +408,23 @@
                     utterance.rate = options.speed || 1.0;
                     utterance.pitch = options.pitch || 1.0;
                     
-                    const voices = speechSynthesis.getVoices();
-                    const spanishVoice = voices.find(voice => voice.lang.includes('es'));
-                    if (spanishVoice) utterance.voice = spanishVoice;
+                    // Esperar a que las voces estén cargadas
+                    const setVoice = () => {
+                        const voices = speechSynthesis.getVoices();
+                        const spanishVoice = voices.find(voice => voice.lang.includes('es'));
+                        if (spanishVoice) {
+                            utterance.voice = spanishVoice;
+                            speechSynthesis.speak(utterance);
+                        } else {
+                            this.showNotification('Voz en español no disponible', 'warning');
+                        }
+                    };
                     
-                    speechSynthesis.speak(utterance);
+                    if (speechSynthesis.getVoices().length === 0) {
+                        speechSynthesis.addEventListener('voiceschanged', setVoice, { once: true });
+                    } else {
+                        setVoice();
+                    }
                 } else {
                     this.showNotification('Síntesis no disponible', 'error');
                 }
@@ -418,12 +464,19 @@
                             this.sendMessage();
                         }
                     };
+                    
+                    this.recognition.onerror = (event) => {
+                        this.showNotification('Error en reconocimiento de voz: ' + event.error, 'error');
+                    };
+                } else {
+                    this.showNotification('Reconocimiento de voz no disponible', 'error');
                 }
             }
             
             toggleVoiceRecognition() {
                 if (this.recognition) {
                     this.recognition.start();
+                    this.showNotification('Escuchando...', 'info');
                 } else {
                     this.showNotification('Reconocimiento no disponible', 'error');
                 }
@@ -433,7 +486,7 @@
                 const container = document.getElementById('chat-container');
                 const div = document.createElement('div');
                 
-                div.className = `message-bubble ${isUser ? 'bg-blue-800 ml-auto' : 'bg-purple-800'} max-w-85% p-4 rounded-3xl mb-4 text-white`;
+                div.className = `message-bubble ${isUser ? 'bg-blue-800 ml-auto' : 'bg-purple-800'} max-w-[85%] p-4 rounded-3xl mb-4 text-white`;
                 div.innerHTML = `
                     <div>${content}</div>
                     <div class="text-xs opacity-70 mt-2">${new Date().toLocaleTimeString()}</div>
@@ -449,11 +502,11 @@
             
             displayAnalysisResults(result) {
                 const content = document.getElementById('analysis-content');
-                const analysis = result.analysis;
+                const analysis = result.analysis || {};
                 
                 content.innerHTML = `
                     <div class="space-y-2">
-                        <div><strong>Versos:</strong> ${analysis.totalVerses}</div>
+                        <div><strong>Versos:</strong> ${analysis.totalVerses || 'N/A'}</div>
                         <div><strong>Métrica:</strong> ${analysis.metrics?.pattern || 'N/A'}</div>
                         <div><strong>Rima:</strong> ${analysis.rhyme?.type || 'N/A'}</div>
                     </div>

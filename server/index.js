@@ -7,6 +7,7 @@ const winston = require('winston');
 const path = require('path');
 const fs = require('fs');
 const http = require('http');
+const https = require('https');
 const socketIo = require('socket.io');
 const cron = require('node-cron');
 
@@ -22,18 +23,29 @@ const LearningService = require('./services/learningService');
 class CarnivalitoServer {
   constructor() {
     this.app = express();
-    this.server = http.createServer(this.app);
-    this.io = socketIo(this.server, {
-      cors: {
-        origin: process.env.ALLOWED_ORIGINS?.split(',') || ["http://localhost:3000"],
-        methods: ["GET", "POST"]
+
+    // HTTPS opcional
+    const useHttps = process.env.USE_HTTPS === 'true';
+    if (useHttps) {
+      const keyPath = process.env.SSL_KEY || './ssl/key.pem';
+      const certPath = process.env.SSL_CERT || './ssl/cert.pem';
+      if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
+        console.error('Certificados SSL no encontrados. Desactiva USE_HTTPS o crea los certificados.');
+        process.exit(1);
       }
-    });
-    
-    this.port = process.env.PORT || 3000;
+      const options = {
+        key: fs.readFileSync(keyPath),
+        cert: fs.readFileSync(certPath)
+      };
+      this.server = https.createServer(options, this.app);
+    } else {
+      this.server = http.createServer(this.app);
+    }
+
+    this.port = process.env.PORT || 3001;
     this.apiKeyManager = new APIKeyManager();
     this.dbManager = new DatabaseManager();
-    
+
     this.initializeLogger();
     this.initializeMiddleware();
     this.initializeServices();
@@ -65,65 +77,55 @@ class CarnivalitoServer {
   }
 
   initializeMiddleware() {
-    // Security middleware
-    this.app.use(helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "cdn.tailwindcss.com"],
-          scriptSrc: ["'self'", "'unsafe-inline'", "cdn.tailwindcss.com", "cdn.jsdelivr.net"],
-          fontSrc: ["'self'", "fonts.gstatic.com"],
-          imgSrc: ["'self'", "data:", "https:"],
-          connectSrc: ["'self'", "wss:", "ws:"],
-          mediaSrc: ["'self'", "blob:"]
+    // Helmet con CSP optimizado
+    this.app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "cdn.tailwindcss.com", "cdnjs.cloudflare.com"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "cdn.tailwindcss.com", "cdn.jsdelivr.net"],
+            fontSrc: ["'self'", "fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: ["'self'", "wss:", "ws:", "http:", "https:"],
+            mediaSrc: ["'self'", "blob:"]
+          }
         }
-      }
-    }));
+      })
+    );
 
-    // Compression
     this.app.use(compression());
 
-    // CORS
     this.app.use(cors({
       origin: process.env.ALLOWED_ORIGINS?.split(',') || ["http://localhost:3000"],
       credentials: true
     }));
 
-    // Rate limiting
     const limiter = rateLimit({
-      windowMs: parseInt(process.env.RATE_LIMIT_WINDOW) || 900000, // 15 minutos
+      windowMs: parseInt(process.env.RATE_LIMIT_WINDOW) || 900000,
       max: parseInt(process.env.RATE_LIMIT_MAX) || 100,
-      message: {
-        error: 'Demasiadas peticiones, pisha. Espera un poquito.'
-      },
+      message: { error: 'Demasiadas peticiones, espera un poquito.' },
       standardHeaders: true,
       legacyHeaders: false
     });
 
     const chatLimiter = rateLimit({
-      windowMs: 60000, // 1 minuto
+      windowMs: 60000,
       max: parseInt(process.env.CHAT_RATE_LIMIT) || 20,
-      message: {
-        error: 'Tranquilo, mostro. Demasiados mensajes muy rápido.'
-      }
+      message: { error: 'Demasiados mensajes muy rápido.' }
     });
 
     this.app.use(limiter);
     this.app.use('/api/chat', chatLimiter);
 
-    // Body parsing
     this.app.use(express.json({ limit: '10mb' }));
     this.app.use(express.urlencoded({ extended: true }));
 
-    // Static files
     this.app.use(express.static(path.join(__dirname, '../public')));
 
-    // Request logging
+    // Logger de requests
     this.app.use((req, res, next) => {
-      this.logger.info(`${req.method} ${req.path}`, {
-        ip: req.ip,
-        userAgent: req.get('User-Agent')
-      });
+      this.logger.info(`${req.method} ${req.path}`, { ip: req.ip, userAgent: req.get('User-Agent') });
       next();
     });
   }
@@ -131,12 +133,10 @@ class CarnivalitoServer {
   async initializeServices() {
     try {
       await this.dbManager.initialize();
-      
       this.aiService = new AIService(this.apiKeyManager, this.logger);
       this.voiceService = new VoiceService(this.apiKeyManager, this.logger);
       this.poetryService = new PoetryService(this.logger);
       this.learningService = new LearningService(this.dbManager, this.logger);
-
       this.logger.info('Todos los servicios inicializados correctamente');
     } catch (error) {
       this.logger.error('Error inicializando servicios:', error);
@@ -145,25 +145,13 @@ class CarnivalitoServer {
   }
 
   initializeRoutes() {
-    // API Routes
-    this.app.use('/api/chat', require('./routes/chat')(
-      this.aiService, 
-      this.learningService, 
-      this.dbManager
-    ));
-    
+    this.app.use('/api/chat', require('./routes/chat')(this.aiService, this.learningService, this.dbManager));
     this.app.use('/api/voice', require('./routes/voice')(this.voiceService));
     this.app.use('/api/poetry', require('./routes/poetry')(this.poetryService));
-    this.app.use('/api/admin', require('./routes/admin')(
-      this.dbManager, 
-      this.apiKeyManager,
-      this.learningService
-    ));
+    this.app.use('/api/admin', require('./routes/admin')(this.dbManager, this.apiKeyManager, this.learningService));
 
-    // Health check
     this.app.get('/api/health', (req, res) => {
       const keyIntegrity = this.apiKeyManager.validateKeyIntegrity();
-      
       res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
@@ -177,174 +165,94 @@ class CarnivalitoServer {
         },
         stats: {
           uptime: process.uptime(),
-          memory: process.memoryUsage(),
+          memoryUsage: process.memoryUsage(),
           apiKeysValid: keyIntegrity.valid,
           apiKeysTotal: keyIntegrity.total
         }
       });
     });
 
-    // Main page
     this.app.get('/', (req, res) => {
       res.sendFile(path.join(__dirname, '../public/index.html'));
     });
 
-    // 404 handler
-    this.app.use('*', (req, res) => {
-      res.status(404).json({
-        error: 'Ruta no encontrada, pisha',
-        path: req.originalUrl
-      });
-    });
+    this.app.use('*', (req, res) => res.status(404).json({ error: 'Ruta no encontrada', path: req.originalUrl }));
 
-    // Error handler
     this.app.use((err, req, res, next) => {
       this.logger.error('Error no manejado:', err);
-      res.status(500).json({
-        error: 'Error interno del servidor',
-        timestamp: new Date().toISOString()
-      });
+      res.status(500).json({ error: 'Error interno del servidor', timestamp: new Date().toISOString() });
     });
   }
 
   initializeSocketHandlers() {
+    this.io = socketIo(this.server, {
+      cors: {
+        origin: process.env.ALLOWED_ORIGINS?.split(',') || ["http://localhost:3000"],
+        methods: ["GET", "POST"]
+      }
+    });
+
     this.io.on('connection', (socket) => {
       this.logger.info('Cliente conectado:', socket.id);
-
-      socket.on('join_room', (room) => {
-        socket.join(room);
-        this.logger.info(`Cliente ${socket.id} se unió a la sala ${room}`);
-      });
-
+      socket.on('join_room', (room) => socket.join(room));
       socket.on('chat_message', async (data) => {
         try {
-          const response = await this.aiService.processMessage(
-            data.message, 
-            data.userId, 
-            data.context
-          );
-          
-          socket.emit('chat_response', {
-            response,
-            timestamp: new Date().toISOString(),
-            messageId: data.messageId
-          });
-
-          // Aprendizaje en tiempo real
+          const response = await this.aiService.processMessage(data.message, data.userId, data.context);
+          socket.emit('chat_response', { response, timestamp: new Date().toISOString(), messageId: data.messageId });
           if (process.env.ENABLE_LEARNING_MODE === 'true') {
             this.learningService.analyzeInteraction(data.message, response);
           }
-
         } catch (error) {
           this.logger.error('Error procesando mensaje del socket:', error);
-          socket.emit('chat_error', {
-            error: 'Error procesando mensaje',
-            messageId: data.messageId
-          });
+          socket.emit('chat_error', { error: 'Error procesando mensaje', messageId: data.messageId });
         }
       });
-
       socket.on('voice_synthesis', async (data) => {
         try {
-          const audioBuffer = await this.voiceService.synthesizeText(
-            data.text,
-            data.options
-          );
-          
-          socket.emit('voice_ready', {
-            audio: audioBuffer.toString('base64'),
-            messageId: data.messageId
-          });
+          const audioBuffer = await this.voiceService.synthesizeText(data.text, data.options);
+          socket.emit('voice_ready', { audio: audioBuffer.toString('base64'), messageId: data.messageId });
         } catch (error) {
           this.logger.error('Error en síntesis de voz:', error);
-          socket.emit('voice_error', {
-            error: 'Error generando audio',
-            messageId: data.messageId
-          });
+          socket.emit('voice_error', { error: 'Error generando audio', messageId: data.messageId });
         }
       });
-
-      socket.on('disconnect', () => {
-        this.logger.info('Cliente desconectado:', socket.id);
-      });
+      socket.on('disconnect', () => this.logger.info('Cliente desconectado:', socket.id));
     });
   }
 
   initializeScheduledTasks() {
-    // Backup automático diario
-    cron.schedule('0 2 * * *', () => {
-      this.logger.info('Iniciando backup automático...');
-      this.dbManager.createBackup()
-        .then(backupPath => {
-          this.logger.info(`Backup creado: ${backupPath}`);
-        })
-        .catch(error => {
-          this.logger.error('Error en backup automático:', error);
-        });
-    });
-
-    // Limpieza de logs antiguos
-    cron.schedule('0 3 * * 0', () => {
-      this.logger.info('Limpiando logs antiguos...');
-      // Implementar limpieza de logs
-    });
-
-    // Análisis de aprendizaje semanal
+    cron.schedule('0 2 * * *', () => this.dbManager.createBackup().then(path => this.logger.info(`Backup creado: ${path}`)).catch(err => this.logger.error(err)));
+    cron.schedule('0 3 * * 0', () => this.logger.info('Limpiando logs antiguos...'));
     cron.schedule('0 1 * * 1', () => {
-      if (process.env.ENABLE_LEARNING_MODE === 'true') {
-        this.logger.info('Ejecutando análisis de aprendizaje semanal...');
-        this.learningService.performWeeklyAnalysis();
-      }
+      if (process.env.ENABLE_LEARNING_MODE === 'true') this.learningService.performWeeklyAnalysis();
     });
-
     this.logger.info('Tareas programadas configuradas');
   }
 
   async start() {
-    try {
-      // Verificar directorios necesarios
-      const dirs = ['logs', 'data', 'backups', 'public'];
-      dirs.forEach(dir => {
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir, { recursive: true });
-        }
-      });
+    ['logs', 'data', 'backups', 'public'].forEach(dir => { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); });
 
-      this.server.listen(this.port, () => {
-        this.logger.info(`
-🎭 ============================================
-   CARNIVALITO PRO ELITE v3.0 INICIADO
-============================================
-🌐 Servidor: http://${process.env.HOST || 'localhost'}:${this.port}
-👑 Admin: http://${process.env.HOST || 'localhost'}:${this.port}/admin
+    this.server.listen(this.port, () => {
+      const protocol = process.env.USE_HTTPS === 'true' ? 'https' : 'http';
+      this.logger.info(`
+🎭 Carnivalito Pro Elite 3.0 iniciado
+🌐 Servidor: ${protocol}://${process.env.HOST || 'localhost'}:${this.port}
+👑 Admin: ${protocol}://${process.env.HOST || 'localhost'}:${this.port}/admin
 🔒 Modo: ${process.env.NODE_ENV || 'development'}
 🔑 APIs cifradas: ${this.apiKeyManager.validateKeyIntegrity().valid}
 🧠 Aprendizaje: ${process.env.ENABLE_LEARNING_MODE === 'true' ? 'Activo' : 'Inactivo'}
 🎤 Síntesis de voz: ${process.env.ENABLE_VOICE_SYNTHESIS === 'true' ? 'Activa' : 'Inactiva'}
-============================================
-        `);
-      });
-
-    } catch (error) {
-      this.logger.error('Error iniciando servidor:', error);
-      process.exit(1);
-    }
+      `);
+    });
   }
 
   async shutdown() {
     this.logger.info('Cerrando servidor...');
-    
     try {
-      // Crear backup final
       await this.dbManager.createBackup();
-      
-      // Limpiar claves en memoria
       this.apiKeyManager.clearMemoryKeys();
-      
-      // Cerrar conexiones
       this.io.close();
       this.server.close();
-      
       this.logger.info('Servidor cerrado correctamente');
       process.exit(0);
     } catch (error) {
@@ -354,33 +262,11 @@ class CarnivalitoServer {
   }
 }
 
-// Manejo de señales de sistema
-process.on('SIGTERM', () => {
-  console.log('Recibida señal SIGTERM, cerrando servidor...');
-  if (global.server) {
-    global.server.shutdown();
-  }
-});
+process.on('SIGTERM', () => global.server?.shutdown());
+process.on('SIGINT', () => global.server?.shutdown());
+process.on('uncaughtException', (err) => { console.error(err); process.exit(1); });
+process.on('unhandledRejection', (reason) => { console.error(reason); process.exit(1); });
 
-process.on('SIGINT', () => {
-  console.log('Recibida señal SIGINT, cerrando servidor...');
-  if (global.server) {
-    global.server.shutdown();
-  }
-});
-
-// Manejo de errores no capturados
-process.on('uncaughtException', (error) => {
-  console.error('Error no capturado:', error);
-  process.exit(1);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Promesa rechazada no manejada:', reason);
-  process.exit(1);
-});
-
-// Iniciar servidor si es el archivo principal
 if (require.main === module) {
   const server = new CarnivalitoServer();
   global.server = server;
