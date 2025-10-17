@@ -1,290 +1,313 @@
-# 🎭 CARNAVALITO SUPREMO
+# 🎭 Carnivalito Pro Elite
 
-**El chat más gaditano de toda Cái - Con arte, gracia y mucho COAC**
+**Chat carnavalero avanzado con IA, memoria persistente y funcionalidades profesionales**
 
-[![Versión](https://img.shields.io/badge/versión-2.0.0-gold)](https://github.com/tu-usuario/carnavalito-supremo)
-[![Cádiz](https://img.shields.io/badge/Made%20in-Cádiz-blue)](https://cadiz.es)
-[![Carnaval](https://img.shields.io/badge/COAC-2024-red)](https://carnavaldecadiz.com)
+![Version](https://img.shields.io/badge/version-2.0.0-yellow)
+![Node](https://img.shields.io/badge/node-%3E%3D16.0.0-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-## 🎪 ¿Qué es Carnavalito Supremo?
+## 🚀 Características Principales
 
-Carnavalito Supremo es la evolución más gaditana del chat carnavalero. Un asistente de IA que habla como un verdadero gaditano, conoce todo el COAC, recita poesías, canta tanguillos y está lleno de efectos visuales del Carnaval de Cádiz.
+### 🎯 Funcionalidades Core
+- **Chat inteligente** con memoria conversacional persistente
+- **Análisis poético** avanzado (métrica, rima, sentimiento)
+- **Sistema de votos** para agrupaciones carnavaleras
+- **Trivia interactiva** con múltiples niveles de dificultad
+- **Reconocimiento de voz** con síntesis personalizada
+- **Panel de administración** completo con estadísticas
 
-### ✨ Características Principales
+### 🎨 Características Técnicas
+- **APIs múltiples**: Groq + HuggingFace + respuestas locales inteligentes
+- **Base de datos SQLite** con esquemas optimizados
+- **Cache inteligente** para mejor rendimiento
+- **Rate limiting** avanzado para prevenir abuso
+- **Seguridad reforzada** con Helmet, JWT, y validación
+- **Logging completo** con Winston
+- **Backup automático** de datos
 
-- 🎭 **IA Gaditana Auténtica**: Habla como un verdadero gaditano, no sevillano
-- 🎤 **Voces Graves**: Jorge y Pablo con acento gaditano auténtico
-- 🎵 **Canta y Recita**: Tanguillos, alegrías, cuplés y pasodobles
-- 🎪 **Efectos Carnavaleros**: Confeti, serpentinas, personajes flotantes
-- 🏛️ **Escudo del Hércules**: Con leones animados en el centro
-- 📚 **Diccionario Gaditano**: 50+ palabras y frases típicas de Cái
-- 🏆 **Experto en COAC**: Conoce modalidades, historia y agrupaciones
-- 🎨 **Diseño Premium**: Colores de Cádiz, efectos dorados y animaciones
+### 🎭 Especialización Gaditana
+- **Conocimiento experto** en Carnaval de Cádiz
+- **Base de datos** del Cádiz CF
+- **Análisis métrico** específico para coplas carnavaleras
+- **Expresiones auténticas** gaditanas
+- **Referencias culturales** locales
 
-## 🚀 Instalación Rápida
+## 📋 Requisitos Previos
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/carnavalito-supremo.git
-cd carnavalito-supremo
+- Node.js >= 16.0.0
+- npm >= 8.0.0
+- Git
+```
 
-# 2. Instalar dependencias
+## 🔧 Instalación
+
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/tu-usuario/carnivalito-pro-elite.git
+cd carnivalito-pro-elite
+```
+
+### 2. Instalar dependencias
+```bash
 npm install
+```
 
-# 3. Configurar variables de entorno
+### 3. Configurar variables de entorno
+```bash
+# Copiar archivo de ejemplo
 cp .env.example .env
 
-# 4. Iniciar el servidor
+# Editar con tus credenciales
+nano .env
+```
+
+### 4. Configurar APIs (Requerido)
+
+#### Groq API (Recomendado)
+1. Ir a [Groq Console](https://console.groq.com/)
+2. Crear cuenta gratuita
+3. Generar API Key
+4. Añadir a `.env`: `GROQ_API_KEY=tu_clave_aqui`
+
+#### HuggingFace API (Opcional - Backup)
+1. Ir a [HuggingFace](https://huggingface.co/settings/tokens)
+2. Crear token gratuito
+3. Añadir a `.env`: `HF_API_KEY=tu_token_aqui`
+
+### 5. Configurar seguridad
+```bash
+# Cambiar en .env:
+JWT_SECRET=tu_jwt_secret_muy_seguro_aqui
+ADMIN_USERNAME=tu_usuario_admin
+ADMIN_PASSWORD=tu_contraseña_super_segura
+```
+
+## 🚀 Uso
+
+### Desarrollo
+```bash
+npm run dev
+```
+
+### Producción
+```bash
 npm start
 ```
 
-**¡Listo miarma!** 🎭 Tu Carnavalito estará disponible en `http://localhost:3001`
+### Acceso
+- **Chat Principal**: http://localhost:3000
+- **Panel Admin**: http://localhost:3000/admin
 
-## 🎯 Requisitos del Sistema
+## 📁 Estructura del Proyecto
 
-- **Node.js**: >= 16.0.0
-- **NPM**: >= 8.0.0
-- **Navegador**: Chrome, Firefox, Safari, Edge (con soporte para Speech API)
-- **Sistema**: Windows, macOS, Linux
-
-## 🎪 Funcionalidades Avanzadas
-
-### 🎤 Sistema de Voz Gaditana
-
-- **Jorge**: Voz grave y pausada, perfecto para cuplés
-- **Pablo**: Voz media-grave, ideal para tanguillos
-- **Configuración**: Pitch personalizable, velocidad adaptada
-- **Pronunciación**: Adaptada al acento gaditano auténtico
-
-### 🎭 Diccionario Gaditano
-
-El Carnavalito conoce estas palabras típicas:
-
-| Palabra | Significado |
-|---------|-------------|
-| **chiquillo** | niño o persona joven, usado cariñosamente |
-| **miarma** | mi alma, expresión cariñosa gaditana |
-| **jartible** | pesado o insistente, pero con arte |
-| **bastinazo** | golpe fuerte o algo exagerado, típico de Cádiz |
-| **fino** | listo, con arte, o buen vino de Jerez |
-
-### 🎵 Estilos Musicales
-
-- **Tanguillos**: Ritmo alegre y festivo
-- **Alegrías**: Cante flamenco gaditano
-- **Pasodobles**: Música de presentación
-- **Cuplés**: Piezas humorísticas y críticas
-- **Popurrí**: Mezcla de estilos
-
-### 🎪 Efectos Visuales
-
-- **Confeti Continuo**: Papelillos dorados cayendo
-- **Serpentinas**: Efectos rojos del Hércules
-- **Personajes Flotantes**: Máscaras e instrumentos
-- **Lluvia de Pétalos**: Efectos especiales del carnaval
-- **Escudo Animado**: Hércules con leones danzantes
-
-## 🛠️ Configuración Avanzada
-
-### Variables de Entorno
-
-```env
-# Configuración básica
-NODE_ENV=development
-PORT=3001
-HOST=0.0.0.0
-
-# Voces gaditanas
-VOZ_JORGE_PITCH=-2.0
-VOZ_PABLO_SPEED=0.8
-
-# Efectos visuales
-CONFETI_ENABLED=true
-PERSONAJES_FLOTANTES=true
-ESCUDO_HERCULES_ANIMADO=true
+```
+carnivalito-pro-elite/
+├── app_enhanced.js              # Servidor principal
+├── routes/
+│   └── ai_enhanced.js          # Rutas de IA y funcionalidades
+├── public/
+│   └── carnival_pro_enhanced.html  # Frontend mejorado
+├── scripts/
+│   ├── setup.js                # Script de configuración inicial
+│   ├── backup.js               # Sistema de backup
+│   └── migrate.js              # Migraciones de DB
+├── logs/                       # Logs del sistema
+├── backups/                    # Backups automáticos
+├── package.json
+├── .env.example
+└── README.md
 ```
 
-### Integración con Google Text-to-Speech
+## 🎛️ Panel de Administración
 
-```bash
-# 1. Crear proyecto en Google Cloud
-# 2. Habilitar Text-to-Speech API
-# 3. Crear credenciales de servicio
-# 4. Configurar variable de entorno
-export GOOGLE_APPLICATION_CREDENTIALS="path/to/credentials.json"
-```
+### Funcionalidades Admin
+- **Estadísticas en tiempo real**
+- **Gestión de configuración de APIs**
+- **Monitor de conversaciones**
+- **Sistema de ranking**
+- **Logs y debugging**
 
-## 🎯 API Endpoints
+### Acceso Seguro
+- Autenticación JWT
+- Rate limiting específico
+- Cookies httpOnly
+- Logging de intentos de acceso
+
+## 🔒 Seguridad
+
+### Medidas Implementadas
+- **Helmet.js** - Headers de seguridad
+- **Rate limiting** - Prevención de abuso
+- **JWT** - Autenticación segura
+- **Validación de entrada** - Joi schemas
+- **CORS configurado** - Origen específico
+- **Variables de entorno** - Credenciales seguras
+
+### Recomendaciones Producción
+1. Usar HTTPS obligatorio
+2. Configurar reverse proxy (nginx)
+3. Implementar WAF
+4. Monitoreo de logs
+5. Backup automático diario
+
+## 📊 API Endpoints
 
 ### Chat Principal
-```
-POST /api/chat
-{
-  "message": "Cuéntame del COAC"
-}
-```
-
-### Generar Poesía
-```
-POST /api/poetry
-{
-  "tema": "Cádiz",
-  "estilo": "tanguillos"
-}
-```
-
-### Diccionario Gaditano
-```
-GET /api/diccionario
-GET /api/diccionario/chiquillo
-```
-
-### Trivia del COAC
-```
-GET /api/trivia
-```
-
-### Síntesis de Voz
-```
-POST /api/speak
-{
-  "text": "¡Viva er Carnaval de Cái!",
-  "voice": "Jorge",
-  "speed": 0.8
-}
-```
-
-## 🎭 Uso del Chat
-
-### Comandos Rápidos
-
-- **"Cuéntame del COAC"** → Información del concurso
-- **"Hazme una poesía"** → Genera versos gaditanos
-- **"Cántame tanguillos"** → Recita con música
-- **"¿Qué significa [palabra]?"** → Diccionario gaditano
-- **"Modalidades del carnaval"** → Explica chirigota, comparsa, etc.
-
-### Botones de Acción
-
-- 🏆 **Sobre el COAC**
-- 📝 **Poesía de Cái**
-- 🎵 **Tanguillos**
-- 🎪 **Modalidades**
-- 💬 **Frases típicas**
-- 🧠 **Trivia COAC**
-
-## 🎨 Personalización
-
-### Colores de Cádiz
-
-```css
-:root {
-    --color-oro: #FFD700;
-    --color-azul-cadiz: #1e3a8a;
-    --color-rojo-hercules: #dc2626;
-    --color-verde-mar: #059669;
-}
-```
-
-### Efectos Personalizables
-
-- Velocidad del confeti
-- Frecuencia de personajes flotantes
-- Colores del escudo del Hércules
-- Animaciones del texto
-
-## 🔧 Desarrollo
-
-### Scripts Disponibles
-
 ```bash
-npm start          # Iniciar servidor
-npm run dev        # Desarrollo con nodemon
-npm test           # Ejecutar tests
-npm run setup      # Configuración inicial
-```
-
-### Estructura del Proyecto
-
-```
-carnavalito-supremo/
-├── server/
-│   ├── index.js           # Servidor principal
-│   └── routes/            # Rutas de la API
-├── public/
-│   ├── index.html         # Interfaz principal
-│   ├── css/               # Estilos del carnaval
-│   ├── js/                # JavaScript avanzado
-│   ├── images/            # Imágenes del carnaval
-│   └── sounds/            # Sonidos gaditanos
-├── data/                  # Base de datos local
-├── logs/                  # Archivos de log
-└── package.json
-```
-
-## 🐛 Solución de Problemas
-
-### Error SSL Protocol
-```bash
-# Cambiar HTTPS a HTTP en desarrollo
-USE_HTTPS=false
-```
-
-### Problemas de Voz
-```bash
-# Verificar permisos del micrófono
-# Usar Chrome o Firefox actualizado
-```
-
-### Efectos No Aparecen
-```bash
-# Verificar configuración de efectos
-EFECTOS_VISUALES=true
-CONFETI_ENABLED=true
-```
-
-## 🤝 Contribuir
-
-¡Las contribuciones son bienvenidas miarma!
-
-1. Fork del proyecto
-2. Crear rama: `git checkout -b feature/nueva-funcionalidad`
-3. Commit: `git commit -m 'Agregar nueva funcionalidad gaditana'`
-4. Push: `git push origin feature/nueva-funcionalidad`
-5. Pull Request
-
-### Cómo Agregar Palabras Gaditanas
-
-```javascript
-// En server/index.js, agregar a DICCIONARIO_GADITANO
+POST /api/ai/chat
 {
-    word: 'nueva_palabra',
-    meaning: 'significado gaditano'
+  "message": "¡Hola, pisha!",
+  "userId": "user_123",
+  "sessionId": "session_456"
 }
 ```
 
-## 📝 Licencia
+### Análisis Poético
+```bash
+POST /api/ai/analyze-poem
+{
+  "text": "En Cádiz la bella...",
+  "userId": "user_123"
+}
+```
 
-MIT License - Hecho con ❤️ en Cádiz
+### Trivia
+```bash
+GET /api/ai/trivia?difficulty=medium&category=carnaval
+```
 
-## 🎭 Créditos
+### Sistema de Votos
+```bash
+POST /api/ai/vote
+{
+  "agrupacion": "Los Millonarios",
+  "categoria": "chirigota",
+  "puntuacion": 9,
+  "userId": "user_123"
+}
+```
 
-- **Desarrollado**: Con amor para Cádiz
-- **Inspirado**: En el Carnaval de Cádiz y el COAC
-- **Voces**: Jorge y Pablo (configuración gaditana)
-- **Efectos**: Basados en el Teatro Falla
-- **Colores**: Oficiales del Hércules CF y Cádiz
+### Ranking
+```bash
+GET /api/ai/ranking?categoria=chirigota
+```
 
-## 🌟 Agradecimientos
+## 🎯 Funcionalidades Avanzadas
 
-- A todos los carnavaleros de Cái
-- Al Gran Teatro Falla
-- A las agrupaciones del COAC
-- Al Hércules Club de Fútbol
-- A la ciudad más bonita del mundo: **Cádiz**
+### Memoria Conversacional
+- Contexto automático de últimas 5 conversaciones
+- Análisis de sentimiento y temas
+- Persistencia en SQLite
+- Exportación de memoria
+
+### Análisis Poético
+- Conteo de sílabas preciso
+- Detección de esquemas de rima
+- Identificación de patrones métricos
+- Análisis de sentimiento contextual
+
+### Sistema de Votos
+- Prevención de votos duplicados
+- Ranking dinámico con cache
+- Estadísticas detalladas
+- Comentarios opcionales
+
+## 🐛 Debugging
+
+### Logs
+```bash
+# Ver logs en tiempo real
+tail -f logs/carnivalito.log
+
+# Logs de desarrollo
+npm run dev
+```
+
+### Base de Datos
+```bash
+# Acceder a SQLite
+sqlite3 carnival_pro_elite.db
+.tables
+SELECT * FROM conversations LIMIT 5;
+```
+
+## 🔄 Deployment
+
+### VPS Ubuntu (Recomendado)
+```bash
+# 1. Actualizar sistema
+sudo apt update && sudo apt upgrade -y
+
+# 2. Instalar Node.js
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# 3. Clonar y configurar
+git clone https://github.com/tu-usuario/carnivalito-pro-elite.git
+cd carnivalito-pro-elite
+npm install
+
+# 4. Configurar variables de entorno
+cp .env.example .env
+nano .env
+
+# 5. Usar PM2 para producción
+npm install -g pm2
+pm2 start app_enhanced.js --name "carnivalito-pro"
+pm2 startup
+pm2 save
+```
+
+### Con Docker (Alternativo)
+```bash
+# Dockerfile incluido
+docker build -t carnivalito-pro .
+docker run -d -p 3000:3000 --env-file .env carnivalito-pro
+```
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crear branch (`git checkout -b feature/AmazingFeature`)
+3. Commit cambios (`git commit -m 'Add AmazingFeature'`)
+4. Push al branch (`git push origin feature/AmazingFeature`)
+5. Abrir Pull Request
+
+## 📝 Changelog
+
+### v2.0.0 (Actual)
+- ✅ Memoria conversacional persistente
+- ✅ Análisis poético avanzado
+- ✅ Panel de administración completo
+- ✅ Sistema de seguridad reforzado
+- ✅ APIs múltiples con fallback
+- ✅ UI/UX mejorada con tema gaditano
+
+### v1.0.0
+- ✅ Chat básico con IA
+- ✅ Reconocimiento de voz
+- ✅ Sistema de votos simple
+
+## 📄 Licencia
+
+Distribuido bajo la Licencia MIT. Ver `LICENSE` para más información.
+
+## 👥 Soporte
+
+- **Issues**: [GitHub Issues](https://github.com/tu-usuario/carnivalito-pro-elite/issues)
+- **Documentación**: [Wiki del proyecto](https://github.com/tu-usuario/carnivalito-pro-elite/wiki)
+- **Email**: carnivalito.pro@example.com
+
+## 🎉 Agradecimientos
+
+- Groq por su increíble API de LLM
+- HuggingFace por los modelos open source
+- La comunidad carnavalera gaditana
+- Cádiz CF por la inspiración
 
 ---
 
-**¡Viva er Carnaval de Cái!** 🎭⚽🏆
+**¡Viva el Carnaval de Cádiz y viva el Cádiz CF! 🎭⚽**
 
-*"Esto es Carnaval, esto es Carnaval..."* 🎵
+*Hecho con ❤️ en la tacita de plata*
