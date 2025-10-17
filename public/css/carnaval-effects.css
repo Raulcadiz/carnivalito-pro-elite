@@ -1,0 +1,390 @@
+/* 🎭 CARNAVALITO SUPREMO - ESTILOS AVANZADOS */
+
+/* 🎪 ANIMACIONES ESPECIALES DEL CARNAVAL */
+@keyframes flotarCarnaval {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes brillarOro {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.6); }
+}
+
+@keyframes danzarLeones {
+    0% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(5deg); }
+    50% { transform: scale(1.05) rotate(-3deg); }
+    75% { transform: scale(1.08) rotate(3deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* 🎨 GRADIENTES ESPECIALES DE CÁDIZ */
+.gradiente-atardecer-cadiz {
+    background: linear-gradient(135deg, 
+        #ff6b6b 0%, 
+        #ffa726 25%, 
+        #ffcc02 50%, 
+        #42a5f5 75%, 
+        #3f51b5 100%);
+}
+
+.gradiente-mar-cadiz {
+    background: linear-gradient(180deg,
+        #e3f2fd 0%,
+        #81c784 30%,
+        #42a5f5 60%,
+        #1976d2 100%);
+}
+
+.gradiente-carnaval-real {
+    background: linear-gradient(45deg,
+        #ffd700 0%,
+        #ff6f00 20%,
+        #d32f2f 40%,
+        #1976d2 60%,
+        #388e3c 80%,
+        #ffd700 100%);
+    background-size: 300% 300%;
+    animation: moverGradiente 8s ease infinite;
+}
+
+@keyframes moverGradiente {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* 🏛️ ESCUDO HERCULES ANIMADO */
+.escudo-hercules-premium {
+    background: var(--gradiente-carnaval-real);
+    position: relative;
+    overflow: hidden;
+}
+
+.escudo-hercules-premium::before {
+    content: '⚽';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+    animation: flotarCarnaval 3s ease-in-out infinite;
+}
+
+.escudo-hercules-premium::after {
+    content: '🏆';
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 12px;
+    animation: flotarCarnaval 3s ease-in-out infinite reverse;
+}
+
+/* 🎭 PERSONAJES CARNAVALEROS FLOTANTES */
+.personaje-carnaval {
+    position: fixed;
+    z-index: 5;
+    font-size: 3rem;
+    animation: volarPersonaje 20s linear infinite;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.personaje-carnaval.tipo1 { animation-delay: 0s; }
+.personaje-carnaval.tipo2 { animation-delay: 7s; }
+.personaje-carnaval.tipo3 { animation-delay: 14s; }
+
+@keyframes volarPersonaje {
+    0% {
+        left: -100px;
+        top: 20%;
+        transform: rotate(0deg);
+    }
+    25% {
+        top: 40%;
+        transform: rotate(90deg);
+    }
+    50% {
+        top: 60%;
+        transform: rotate(180deg);
+    }
+    75% {
+        top: 30%;
+        transform: rotate(270deg);
+    }
+    100% {
+        left: calc(100% + 100px);
+        top: 50%;
+        transform: rotate(360deg);
+    }
+}
+
+/* 🎵 EFECTOS DE SONIDO VISUAL */
+.onda-sonido {
+    position: fixed;
+    border: 3px solid var(--color-oro);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: ondaExpansion 2s ease-out forwards;
+}
+
+@keyframes ondaExpansion {
+    0% {
+        width: 20px;
+        height: 20px;
+        opacity: 1;
+    }
+    100% {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+    }
+}
+
+/* 🎪 EFECTOS DE HOVER ESPECIALES */
+.elemento-interactivo {
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.elemento-interactivo:hover {
+    transform: scale(1.1) rotate(5deg);
+    filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+}
+
+/* 🎨 TEXTO CON EFECTOS GADITANOS */
+.texto-gaditano {
+    background: linear-gradient(45deg, #ffd700, #ff6f00, #d32f2f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: brillarTexto 3s ease-in-out infinite;
+}
+
+@keyframes brillarTexto {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.3) drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)); }
+}
+
+/* 🎭 MÁSCARAS DE CARNAVAL FLOTANTES */
+.mascara-carnaval {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.3;
+    animation: flotarMascara 15s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes flotarMascara {
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.3;
+    }
+    50% { 
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 0.6;
+    }
+}
+
+/* 🎊 LLUVIA DE PÉTALOS */
+.petalo {
+    position: fixed;
+    top: -50px;
+    width: 20px;
+    height: 20px;
+    background: var(--color-oro);
+    border-radius: 0 100% 0 100%;
+    animation: caerPetalo 8s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes caerPetalo {
+    0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* 🌊 EFECTOS DE AGUA DEL MAR DE CÁDIZ */
+.ola-cadiz {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="%23e3f2fd" opacity="0.8"/></svg>') repeat-x;
+    animation: moverOla 20s ease-in-out infinite;
+    opacity: 0.6;
+    z-index: 1;
+}
+
+@keyframes moverOla {
+    0%, 100% { transform: translateX(0px); }
+    50% { transform: translateX(-50px); }
+}
+
+/* 🎺 INSTRUMENTOS MUSICALES FLOTANTES */
+.instrumento-musical {
+    position: fixed;
+    font-size: 2.5rem;
+    animation: tocarInstrumento 12s ease-in-out infinite;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+@keyframes tocarInstrumento {
+    0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 0.4;
+    }
+    25% { 
+        transform: scale(1.2) rotate(10deg);
+        opacity: 0.7;
+    }
+    75% { 
+        transform: scale(1.1) rotate(-10deg);
+        opacity: 0.6;
+    }
+}
+
+/* 🎪 CARPA DE CIRCO EFECTO */
+.carpa-efecto {
+    position: relative;
+    background: repeating-linear-gradient(
+        45deg,
+        var(--color-oro),
+        var(--color-oro) 10px,
+        var(--color-rojo-hercules) 10px,
+        var(--color-rojo-hercules) 20px
+    );
+    border-radius: 20px 20px 0 0;
+}
+
+.carpa-efecto::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid var(--color-azul-cadiz);
+}
+
+/* 🎭 RESPONSIVE AVANZADO */
+@media (max-width: 768px) {
+    .personaje-carnaval {
+        font-size: 2rem;
+    }
+    
+    .instrumento-musical {
+        font-size: 1.5rem;
+    }
+    
+    .mascara-carnaval {
+        font-size: 1.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .personaje-carnaval,
+    .instrumento-musical,
+    .mascara-carnaval,
+    .petalo,
+    .ola-cadiz {
+        animation: none;
+    }
+    
+    .elemento-interactivo {
+        transition: none;
+    }
+}
+
+/* 🎨 TEMA OSCURO PARA LA NOCHE */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-blanco-cadiz: #1e293b;
+        --color-negro-elegante: #f8fafc;
+    }
+    
+    .chat-container {
+        background: rgba(30, 41, 59, 0.95);
+        color: white;
+    }
+    
+    .panel-lateral {
+        background: rgba(30, 41, 59, 0.9);
+        color: white;
+    }
+}
+
+/* 🎪 ANIMACIÓN DE ENTRADA ESPECTACULAR */
+.entrada-espectacular {
+    animation: entradaCarnaval 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+@keyframes entradaCarnaval {
+    0% {
+        opacity: 0;
+        transform: translateY(100px) scale(0.8) rotate(-10deg);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateY(-20px) scale(1.1) rotate(5deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px) scale(1) rotate(0deg);
+    }
+}
+
+/* 🎵 EFECTOS DE PULSACIÓN MUSICAL */
+.pulso-musical {
+    animation: pulsoRitmo 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulsoRitmo {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+.pulso-musical.tanguillos {
+    animation-duration: 0.4s;
+}
+
+.pulso-musical.alegrias {
+    animation-duration: 0.5s;
+}
+
+.pulso-musical.pasodoble {
+    animation-duration: 0.3s;
+}
+
+/* 🏆 EFECTOS DE VICTORIA/ÉXITO */
+.efecto-victoria {
+    position: relative;
+    overflow: hidden;
+}
+
+.efecto-victoria::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 215, 0, 0.4), 
+        transparent);
+    animation: brilloVictoria 2s ease-in-out;
+}
+
+@keyframes brilloVictoria {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}

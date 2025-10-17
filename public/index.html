@@ -3,540 +3,845 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carnivalito Pro Elite 3.0</title>
-    <!-- CSP para permitir fuentes, scripts y conexiones necesarias -->
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self';
-        font-src 'self' fonts.gstatic.com https://cdnjs.cloudflare.com;
-        script-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com 'unsafe-inline';
-        style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';
-        connect-src 'self' https://45.134.226.174:3001;
-        img-src 'self' data:;
-    ">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Favicon para evitar ERR_SSL_PROTOCOL_ERROR -->
-    <link rel="icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///wD///8A////AP///wD///8A////AP///wD///8A">
+    <title>🎭 Carnavalito Supremo - El Chat más Gaditano de Cái</title>
+    
+    <!-- Fuentes gaditanas -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Fredoka:wght@300;400;600&family=Comic+Neue:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Sonidos -->
+    <link rel="preload" href="sounds/carnaval-ambient.mp3" as="audio">
+    <link rel="preload" href="sounds/applause.mp3" as="audio">
     
     <style>
+        :root {
+            --color-oro: #FFD700;
+            --color-azul-cadiz: #1e3a8a;
+            --color-rojo-hercules: #dc2626;
+            --color-blanco-cadiz: #f8fafc;
+            --color-negro-elegante: #1e293b;
+            --color-verde-mar: #059669;
+            --gradiente-carnaval: linear-gradient(135deg, var(--color-oro), var(--color-azul-cadiz), var(--color-rojo-hercules));
+            --gradiente-mar: linear-gradient(180deg, #3b82f6, #1e40af, #1e3a8a);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Fredoka', system-ui, sans-serif;
-            background: linear-gradient(135deg, #003366 0%, #001122 50%, #4A148C 100%);
+            font-family: 'Fredoka', cursive;
+            background: var(--gradiente-mar);
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-        
-        .chat-container {
-            height: 60vh;
-            overflow-y: auto;
+
+        /* 🎉 EFECTOS DE FONDO CARNAVALEROS */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
-        
-        .message-bubble {
-            animation: slideInMessage 0.4s ease-out;
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: fall linear infinite;
         }
-        
-        @keyframes slideInMessage {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .confetti.papel {
+            background: var(--color-oro);
+            border-radius: 2px;
         }
-        
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        
-        .notification {
+
+        .confetti.serpentina {
+            width: 20px;
+            height: 4px;
+            background: var(--color-rojo-hercules);
+            border-radius: 2px;
+        }
+
+        .confetti.estrella {
+            background: var(--color-azul-cadiz);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 🏛️ ESCUDO DEL HÉRCULES CON LEONES */
+        .escudo-hercules {
             position: fixed;
             top: 20px;
-            right: 20px;
-            padding: 1rem;
-            border-radius: 10px;
-            font-weight: 600;
-            z-index: 1001;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            background: var(--gradiente-carnaval);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            border: 3px solid var(--color-oro);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+            animation: pulse-escudo 3s ease-in-out infinite;
         }
-        
-        .notification.show {
-            transform: translateX(0);
+
+        @keyframes pulse-escudo {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* 🎭 HEADER CARNAVALERO */
+        .header-carnaval {
+            background: var(--gradiente-carnaval);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 100;
+        }
+
+        .titulo-principal {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+            margin-bottom: 10px;
+            animation: brillo-titulo 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes brillo-titulo {
+            0% { text-shadow: 3px 3px 6px rgba(0,0,0,0.7), 0 0 20px rgba(255,215,0,0.5); }
+            100% { text-shadow: 3px 3px 6px rgba(0,0,0,0.7), 0 0 30px rgba(255,215,0,0.8); }
+        }
+
+        .subtitulo {
+            font-size: 1.2rem;
+            color: var(--color-blanco-cadiz);
+            font-weight: 300;
+        }
+
+        /* 🎪 CONTAINER PRINCIPAL */
+        .container-principal {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 💬 ÁREA DE CHAT */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--color-oro);
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            animation: aparecer-mensaje 0.5s ease-out;
+        }
+
+        @keyframes aparecer-mensaje {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .message.user .message-avatar {
+            background: var(--color-azul-cadiz);
+            color: white;
+        }
+
+        .message.bot .message-avatar {
+            background: var(--color-oro);
+            color: var(--color-negro-elegante);
+        }
+
+        .message-content {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 70%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: var(--color-azul-cadiz);
+            color: white;
+        }
+
+        .message.bot .message-content {
+            background: var(--color-oro);
+            color: var(--color-negro-elegante);
+        }
+
+        /* 🎤 ÁREA DE INPUT */
+        .input-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-mensaje {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid var(--color-oro);
+            border-radius: 25px;
+            font-size: 16px;
+            font-family: 'Fredoka', cursive;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-mensaje:focus {
+            border-color: var(--color-azul-cadiz);
+            box-shadow: 0 0 20px rgba(30, 58, 138, 0.3);
+        }
+
+        .btn-enviar {
+            background: var(--gradiente-carnaval);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-enviar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-enviar:active {
+            transform: translateY(0);
+        }
+
+        /* 🎵 CONTROLES DE VOZ */
+        .controles-voz {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .btn-voz {
+            background: var(--color-verde-mar);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Fredoka', cursive;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-voz:hover {
+            background: #047857;
+            transform: scale(1.05);
+        }
+
+        /* 🎭 PANEL LATERAL */
+        .panel-lateral {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .seccion-panel {
+            margin-bottom: 25px;
+        }
+
+        .titulo-seccion {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--color-azul-cadiz);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .lista-palabras {
+            display: grid;
+            gap: 10px;
+        }
+
+        .palabra-gaditana {
+            background: var(--color-oro);
+            padding: 10px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .palabra-gaditana:hover {
+            background: var(--color-azul-cadiz);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* 🎪 BOTONES DE ACCIÓN */
+        .botones-accion {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-accion {
+            background: var(--color-rojo-hercules);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-family: 'Fredoka', cursive;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-accion:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+        }
+
+        /* 🎊 EFECTOS ESPECIALES */
+        .efecto-carnaval {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            z-index: 1000;
+            animation: explosion-carnaval 2s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes explosion-carnaval {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.5);
+            }
+        }
+
+        /* 📱 RESPONSIVE */
+        @media (max-width: 768px) {
+            .titulo-principal {
+                font-size: 2.5rem;
+            }
+            
+            .container-principal {
+                padding: 10px;
+            }
+            
+            .chat-messages {
+                height: 300px;
+            }
+            
+            .escudo-hercules {
+                width: 60px;
+                height: 60px;
+                font-size: 18px;
+            }
+        }
+
+        /* 🎵 LOADING ANIMATION */
+        .loading-carnaval {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading-carnaval.active {
+            display: block;
+        }
+
+        .spinner-carnaval {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--color-oro);
+            border-top: 4px solid var(--color-azul-cadiz);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="text-white">
+<body>
+    <!-- 🎉 Efectos de confeti -->
+    <div class="confetti-container" id="confetti-container"></div>
     
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-yellow-400 via-red-500 to-blue-900 p-6 text-center">
-        <div class="flex items-center justify-center mb-4">
-            <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mr-4">⚽</div>
-            <h1 class="text-3xl font-bold">Carnivalito Pro Elite 3.0</h1>
-            <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center ml-4">🎭</div>
-        </div>
-        <p class="text-sm opacity-90 mb-4">Asistente Carnavalero con IA Avanzada</p>
-        
-        <!-- Tabs -->
-        <div class="flex justify-center gap-2 text-xs">
-            <button class="tab-button active px-3 py-1 rounded-full font-semibold bg-white bg-opacity-20" data-tab="chat">💬 Chat</button>
-            <button class="tab-button px-3 py-1 rounded-full font-semibold bg-white bg-opacity-20" data-tab="poetry">📝 Poesía</button>
-            <button class="tab-button px-3 py-1 rounded-full font-semibold bg-white bg-opacity-20" data-tab="voice">🎤 Voz</button>
-        </div>
-    </header>
-
-    <main class="container mx-auto px-4 py-6 max-w-4xl">
-        
-        <!-- Chat Tab -->
-        <div id="chat-tab" class="tab-content active">
-            <div class="bg-black bg-opacity-30 rounded-2xl p-6 backdrop-blur-lg border border-yellow-400">
-                <div id="chat-container" class="chat-container mb-4">
-                    <div class="message-bubble bg-purple-800 max-w-[85%] p-4 rounded-3xl mb-4 text-white">
-                        <div class="font-bold mb-2">¡Viva er Cádiz y viva er Carnaval! 🎉⚽</div>
-                        <div class="mb-3">Soy <em>Carnivalito Pro Elite 3.0</em>, tu asistente carnavalero de nueva generación.</div>
-                        <div class="text-sm space-y-1">
-                            <div>🧠 <strong>IA Avanzada:</strong> Análisis contextual y aprendizaje adaptativo</div>
-                            <div>🎤 <strong>Voz Realista:</strong> Síntesis con personalidad gaditana</div>
-                            <div>📝 <strong>Análisis Poético:</strong> Métricas, rimas y estilo carnavalero</div>
-                        </div>
-                        <div class="mt-3 text-sm opacity-90"><em>¡Pregúntame lo que quieras, pisha!</em></div>
-                    </div>
-                </div>
-                
-                <div id="typing-indicator" class="text-yellow-400 text-sm text-center py-2" style="display: none;">
-                    🎭 Carnivalito está pensando...
-                </div>
-                
-                <div class="flex gap-3">
-                    <input 
-                        type="text" 
-                        id="message-input" 
-                        placeholder="Escribe tu mensaje carnavalero..." 
-                        class="flex-1 bg-white bg-opacity-10 text-white border-2 border-yellow-400 rounded-full px-6 py-3 focus:outline-none placeholder-gray-300"
-                        maxlength="1000"
-                    >
-                    <button id="send-btn" class="bg-yellow-500 text-blue-900 px-6 py-3 rounded-full font-bold">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                    <button id="voice-btn" class="bg-red-600 text-white w-12 h-12 rounded-full flex items-center justify-center">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Poetry Tab -->
-        <div id="poetry-tab" class="tab-content">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-black bg-opacity-30 rounded-2xl p-6 backdrop-blur-lg border border-yellow-400">
-                    <h3 class="text-xl font-bold mb-4 text-yellow-400">📝 Analizador Poético</h3>
-                    <textarea 
-                        id="poetry-text" 
-                        placeholder="Pega aquí tu copla o poema..."
-                        class="w-full h-40 bg-white bg-opacity-10 text-white border border-yellow-400 rounded-lg p-4 resize-none focus:outline-none placeholder-gray-300"
-                    ></textarea>
-                    <button id="analyze-btn" class="bg-yellow-500 text-blue-900 w-full py-2 rounded-lg font-bold mt-4">
-                        🔍 Analizar Métricas
-                    </button>
-                    
-                    <div id="analysis-results" class="mt-6 hidden">
-                        <h4 class="font-bold text-yellow-400 mb-3">Resultados:</h4>
-                        <div id="analysis-content" class="bg-white bg-opacity-10 rounded-lg p-4 text-sm"></div>
-                    </div>
-                </div>
-                
-                <div class="bg-black bg-opacity-30 rounded-2xl p-6 backdrop-blur-lg border border-yellow-400">
-                    <h3 class="text-xl font-bold mb-4 text-yellow-400">✨ Generador de Poesía</h3>
-                    
-                    <div class="space-y-4">
-                        <input 
-                            type="text" 
-                            id="poetry-theme" 
-                            placeholder="Tema (ej: carnaval, amor, Cádiz...)"
-                            class="w-full bg-white bg-opacity-10 text-white border border-yellow-400 rounded-lg px-4 py-2 focus:outline-none placeholder-gray-300"
-                        >
-                        
-                        <select id="poetry-style" class="w-full bg-white bg-opacity-10 text-white border border-yellow-400 rounded-lg px-4 py-2">
-                            <option value="copla">Copla (4 versos octosílabos)</option>
-                            <option value="chirigota">Chirigota (humorística)</option>
-                            <option value="comparsa">Comparsa (lírica)</option>
-                            <option value="tango">Tango flamenco</option>
-                        </select>
-                        
-                        <button id="generate-poetry-btn" class="bg-yellow-500 text-blue-900 w-full py-3 rounded-lg font-bold">
-                            🎭 Generar Poesía
-                        </button>
-                    </div>
-                    
-                    <div id="generated-poetry" class="mt-6 hidden">
-                        <h4 class="font-bold text-yellow-400 mb-3">Poesía Generada:</h4>
-                        <div id="poetry-content" class="bg-white bg-opacity-10 rounded-lg p-4 font-mono text-sm whitespace-pre-line"></div>
-                        <button id="speak-poetry-btn" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-sm mt-3">
-                            🎤 Recitar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Voice Tab -->
-        <div id="voice-tab" class="tab-content">
-            <div class="bg-black bg-opacity-30 rounded-2xl p-6 backdrop-blur-lg border border-yellow-400">
-                <h3 class="text-xl font-bold mb-4 text-yellow-400">🎤 Síntesis de Voz</h3>
-                
-                <textarea 
-                    id="voice-text" 
-                    placeholder="¡Viva er Carnaval de Cádiz, pisha!"
-                    class="w-full h-24 bg-white bg-opacity-10 text-white border border-yellow-400 rounded-lg p-4 resize-none focus:outline-none placeholder-gray-300 mb-4"
-                ></textarea>
-                
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">Velocidad:</label>
-                        <input type="range" id="voice-speed" min="0.5" max="2" step="0.1" value="1" class="w-full">
-                        <div class="text-center text-xs text-gray-300">
-                            <span id="speed-value">1.0</span>x
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">Tono:</label>
-                        <input type="range" id="voice-pitch" min="-10" max="10" step="0.5" value="0" class="w-full">
-                        <div class="text-center text-xs text-gray-300">
-                            <span id="pitch-value">0.0</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="flex gap-3">
-                    <button id="synthesize-btn" class="bg-yellow-500 text-blue-900 flex-1 py-3 rounded-lg font-bold">
-                        🔊 Sintetizar Voz
-                    </button>
-                    <button id="test-voice-btn" class="bg-purple-600 text-white px-4 py-3 rounded-lg font-bold">
-                        🧪 Prueba
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div id="notification" class="notification">
-        <span id="notification-text"></span>
+    <!-- 🏛️ Escudo del Hércules -->
+    <div class="escudo-hercules" title="Hércules Club de Fútbol - Orgullo de Cádiz">
+        🦁
     </div>
-
-    <script>
-        class CarnivalitoApp {
-            constructor() {
-                this.userId = 'user_' + Date.now();
-                this.initializeApp();
-                this.setupEventListeners();
-                this.initializeVoiceRecognition();
-            }
+    
+    <!-- 🎭 Header -->
+    <header class="header-carnaval">
+        <h1 class="titulo-principal">🎭 Carnavalito Supremo 🎭</h1>
+        <p class="subtitulo">El chat más gaditano de toda Cái - ¡Con arte, gracia y mucho COAC!</p>
+    </header>
+    
+    <!-- 📱 Container principal -->
+    <div class="container-principal">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
             
-            initializeApp() {
-                console.log('🎭 Carnivalito Pro Elite 3.0 iniciado');
-                document.getElementById('message-input').focus();
-            }
-            
-            setupEventListeners() {
-                // Tab navigation
-                document.querySelectorAll('.tab-button').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        this.switchTab(e.target.dataset.tab);
-                    });
-                });
-                
-                // Events
-                document.getElementById('send-btn').addEventListener('click', () => this.sendMessage());
-                document.getElementById('message-input').addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') this.sendMessage();
-                });
-                document.getElementById('voice-btn').addEventListener('click', () => this.toggleVoiceRecognition());
-                document.getElementById('analyze-btn').addEventListener('click', () => this.analyzePoetry());
-                document.getElementById('generate-poetry-btn').addEventListener('click', () => this.generatePoetry());
-                document.getElementById('speak-poetry-btn').addEventListener('click', () => this.speakPoetry());
-                document.getElementById('synthesize-btn').addEventListener('click', () => this.synthesizeVoice());
-                document.getElementById('test-voice-btn').addEventListener('click', () => this.testVoice());
-                
-                // Voice sliders
-                document.getElementById('voice-speed').addEventListener('input', (e) => {
-                    document.getElementById('speed-value').textContent = e.target.value;
-                });
-                document.getElementById('voice-pitch').addEventListener('input', (e) => {
-                    document.getElementById('pitch-value').textContent = e.target.value;
-                });
-            }
-            
-            switchTab(tabName) {
-                document.querySelectorAll('.tab-button').forEach(btn => {
-                    btn.classList.remove('active', 'bg-yellow-400', 'text-blue-900');
-                    btn.classList.add('bg-white', 'bg-opacity-20');
-                });
-                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active', 'bg-yellow-400', 'text-blue-900');
-                
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                document.getElementById(`${tabName}-tab`).classList.add('active');
-            }
-            
-            async sendMessage() {
-                const input = document.getElementById('message-input');
-                const message = input.value.trim();
-                
-                if (!message) {
-                    this.showNotification('Escribe un mensaje, pisha!', 'warning');
-                    return;
-                }
-                
-                this.addMessage(message, true);
-                input.value = '';
-                this.showTyping(true);
-                
-                try {
-                    // Usamos URL relativa para evitar problemas con el dominio
-                    const response = await fetch('/api/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            message,
-                            userId: this.userId,
-                            sessionId: 'session_' + Date.now()
-                        })
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`Error en la API: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    this.showTyping(false);
-                    
-                    if (result.reply) {
-                        this.addMessage(result.reply, false);
-                        this.synthesizeResponse(result.reply);
-                    } else {
-                        this.addMessage('Error procesando mensaje. ¿Intentamos de nuevo, pisha?', false);
-                    }
-                    
-                } catch (error) {
-                    console.error('Fetch error:', error.message);
-                    this.showTyping(false);
-                    this.addMessage('Error de conexión. Revisa el servidor o el certificado SSL, pisha.', false);
-                    this.showNotification('Error de conexión con el servidor', 'error');
-                }
-            }
-            
-            async analyzePoetry() {
-                const text = document.getElementById('poetry-text').value.trim();
-                if (!text) {
-                    this.showNotification('Introduce un texto para analizar', 'warning');
-                    return;
-                }
-                
-                try {
-                    const response = await fetch('/api/poetry/analyze', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text, userId: this.userId })
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`Error en la API: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        this.displayAnalysisResults(result);
-                        this.showNotification('Análisis completado', 'success');
-                    } else {
-                        this.showNotification('Error en el análisis', 'error');
-                    }
-                } catch (error) {
-                    console.error('Fetch error:', error.message);
-                    this.showNotification('Error en análisis', 'error');
-                }
-            }
-            
-            async generatePoetry() {
-                const theme = document.getElementById('poetry-theme').value.trim();
-                const style = document.getElementById('poetry-style').value;
-                
-                if (!theme) {
-                    this.showNotification('Introduce un tema', 'warning');
-                    return;
-                }
-                
-                try {
-                    const response = await fetch('/api/poetry/generate', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ theme, style, verses: 4, userId: this.userId })
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`Error en la API: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        document.getElementById('poetry-content').textContent = result.poem;
-                        document.getElementById('generated-poetry').classList.remove('hidden');
-                        this.showNotification('Poesía generada', 'success');
-                    } else {
-                        this.showNotification('Error generando poesía', 'error');
-                    }
-                } catch (error) {
-                    console.error('Fetch error:', error.message);
-                    this.showNotification('Error generando poesía', 'error');
-                }
-            }
-            
-            synthesizeVoice() {
-                const text = document.getElementById('voice-text').value.trim();
-                if (!text) {
-                    this.showNotification('Introduce texto para sintetizar', 'warning');
-                    return;
-                }
-                
-                const options = {
-                    speed: parseFloat(document.getElementById('voice-speed').value),
-                    pitch: parseFloat(document.getElementById('voice-pitch').value)
-                };
-                
-                this.synthesizeWithWebAPI(text, options);
-                this.showNotification('Audio sintetizado', 'success');
-            }
-            
-            synthesizeWithWebAPI(text, options = {}) {
-                if ('speechSynthesis' in window) {
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = 'es-ES';
-                    utterance.rate = options.speed || 1.0;
-                    utterance.pitch = options.pitch || 1.0;
-                    
-                    // Esperar a que las voces estén cargadas
-                    const setVoice = () => {
-                        const voices = speechSynthesis.getVoices();
-                        const spanishVoice = voices.find(voice => voice.lang.includes('es'));
-                        if (spanishVoice) {
-                            utterance.voice = spanishVoice;
-                            speechSynthesis.speak(utterance);
-                        } else {
-                            this.showNotification('Voz en español no disponible', 'warning');
-                        }
-                    };
-                    
-                    if (speechSynthesis.getVoices().length === 0) {
-                        speechSynthesis.addEventListener('voiceschanged', setVoice, { once: true });
-                    } else {
-                        setVoice();
-                    }
-                } else {
-                    this.showNotification('Síntesis no disponible', 'error');
-                }
-            }
-            
-            synthesizeResponse(text) {
-                try {
-                    const shortText = text.length > 200 ? text.substring(0, 200) + '...' : text;
-                    this.synthesizeWithWebAPI(shortText, { speed: 1.1 });
-                } catch (error) {
-                    console.log('Auto-synthesis falló:', error);
-                }
-            }
-            
-            testVoice() {
-                document.getElementById('voice-text').value = "¡Viva er Carnaval de Cádiz, pisha!";
-                this.synthesizeVoice();
-            }
-            
-            speakPoetry() {
-                const text = document.getElementById('poetry-content').textContent;
-                if (text) {
-                    this.synthesizeWithWebAPI(text, { speed: 0.9 });
-                }
-            }
-            
-            initializeVoiceRecognition() {
-                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                    this.recognition = new SpeechRecognition();
-                    this.recognition.lang = 'es-ES';
-                    
-                    this.recognition.onresult = (event) => {
-                        const transcript = event.results[0][0].transcript;
-                        document.getElementById('message-input').value = transcript;
-                        if (event.results[0].isFinal) {
-                            this.sendMessage();
-                        }
-                    };
-                    
-                    this.recognition.onerror = (event) => {
-                        this.showNotification('Error en reconocimiento de voz: ' + event.error, 'error');
-                    };
-                } else {
-                    this.showNotification('Reconocimiento de voz no disponible', 'error');
-                }
-            }
-            
-            toggleVoiceRecognition() {
-                if (this.recognition) {
-                    this.recognition.start();
-                    this.showNotification('Escuchando...', 'info');
-                } else {
-                    this.showNotification('Reconocimiento no disponible', 'error');
-                }
-            }
-            
-            addMessage(content, isUser) {
-                const container = document.getElementById('chat-container');
-                const div = document.createElement('div');
-                
-                div.className = `message-bubble ${isUser ? 'bg-blue-800 ml-auto' : 'bg-purple-800'} max-w-[85%] p-4 rounded-3xl mb-4 text-white`;
-                div.innerHTML = `
-                    <div>${content}</div>
-                    <div class="text-xs opacity-70 mt-2">${new Date().toLocaleTimeString()}</div>
-                `;
-                
-                container.appendChild(div);
-                container.scrollTop = container.scrollHeight;
-            }
-            
-            showTyping(show) {
-                document.getElementById('typing-indicator').style.display = show ? 'block' : 'none';
-            }
-            
-            displayAnalysisResults(result) {
-                const content = document.getElementById('analysis-content');
-                const analysis = result.analysis || {};
-                
-                content.innerHTML = `
-                    <div class="space-y-2">
-                        <div><strong>Versos:</strong> ${analysis.totalVerses || 'N/A'}</div>
-                        <div><strong>Métrica:</strong> ${analysis.metrics?.pattern || 'N/A'}</div>
-                        <div><strong>Rima:</strong> ${analysis.rhyme?.type || 'N/A'}</div>
+            <!-- 💬 Área de chat -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">
+                        <div class="message-avatar">🎭</div>
+                        <div class="message-content">
+                            ¡Ey, miarma! Soy Carnavalito, tu asistente más gaditano. Pregúntame lo que quieras del Carnaval de Cái, el COAC, o cualquier palabra gaditana. ¡También puedo recitarte poesías y hasta cantártelas! 🎵
+                        </div>
                     </div>
-                `;
+                </div>
                 
-                document.getElementById('analysis-results').classList.remove('hidden');
-            }
+                <div class="loading-carnaval" id="loading">
+                    <div class="spinner-carnaval"></div>
+                    <p>Carnavalito está pensando... 🎭</p>
+                </div>
+                
+                <div class="input-area">
+                    <input type="text" 
+                           class="input-mensaje" 
+                           id="messageInput" 
+                           placeholder="Escribe aquí tu mensaje, chiquillo..."
+                           maxlength="500">
+                    <button class="btn-enviar" id="sendButton">
+                        <i class="fas fa-paper-plane"></i> Enviar
+                    </button>
+                </div>
+                
+                <div class="controles-voz">
+                    <button class="btn-voz" id="btnJorge">🎤 Voz Jorge (Grave)</button>
+                    <button class="btn-voz" id="btnPablo">🎤 Voz Pablo (Medio)</button>
+                    <button class="btn-voz" id="btnCantar">🎵 Cantar último</button>
+                </div>
+            </div>
             
-            showNotification(message, type = 'info', duration = 3000) {
-                const notification = document.getElementById('notification');
-                const text = document.getElementById('notification-text');
+            <!-- 🎪 Panel lateral -->
+            <div class="panel-lateral">
+                <div class="seccion-panel">
+                    <h3 class="titulo-seccion">🗣️ Palabras Gaditanas</h3>
+                    <div class="lista-palabras">
+                        <div class="palabra-gaditana" onclick="enviarPalabraRapida('chiquillo')">chiquillo</div>
+                        <div class="palabra-gaditana" onclick="enviarPalabraRapida('miarma')">miarma</div>
+                        <div class="palabra-gaditana" onclick="enviarPalabraRapida('jartible')">jartible</div>
+                        <div class="palabra-gaditana" onclick="enviarPalabraRapida('bastinazo')">bastinazo</div>
+                        <div class="palabra-gaditana" onclick="enviarPalabraRapida('fino')">fino</div>
+                    </div>
+                </div>
                 
-                const colors = {
-                    success: 'bg-green-500 text-white',
-                    error: 'bg-red-500 text-white',
-                    warning: 'bg-yellow-500 text-black',
-                    info: 'bg-blue-500 text-white'
-                };
+                <div class="seccion-panel">
+                    <h3 class="titulo-seccion">🎭 Acciones Rápidas</h3>
+                    <div class="botones-accion">
+                        <button class="btn-accion" onclick="enviarMensajeRapido('Cuéntame del COAC')">
+                            🏆 Sobre el COAC
+                        </button>
+                        <button class="btn-accion" onclick="enviarMensajeRapido('Hazme una poesía de Cádiz')">
+                            📝 Poesía de Cái
+                        </button>
+                        <button class="btn-accion" onclick="enviarMensajeRapido('Cántame unos tanguillos')">
+                            🎵 Tanguillos
+                        </button>
+                        <button class="btn-accion" onclick="enviarMensajeRapido('Explícame las modalidades del carnaval')">
+                            🎪 Modalidades
+                        </button>
+                        <button class="btn-accion" onclick="enviarMensajeRapido('Dime frases gaditanas')">
+                            💬 Frases típicas
+                        </button>
+                        <button class="btn-accion" onclick="trivia()">
+                            🧠 Trivia COAC
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 🔊 Audio para efectos -->
+    <audio id="audioCarnaval" preload="auto">
+        <source src="sounds/carnaval-ambient.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="audioAplauso" preload="auto">
+        <source src="sounds/applause.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 🎭 JavaScript del Carnavalito -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js"></script>
+    <script>
+        // 🎭 CONFIGURACIÓN GLOBAL
+        const API_BASE = window.location.origin;
+        const socket = io();
+        let ultimaRespuesta = '';
+        let vozActual = 'Jorge';
+        
+        // 🎪 ELEMENTOS DOM
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const loading = document.getElementById('loading');
+        
+        // 🎉 INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🎭 Carnavalito Supremo iniciado');
+            iniciarEfectosCarnaval();
+            configurarEventos();
+            conectarSocket();
+        });
+        
+        // 🎊 EFECTOS VISUALES
+        function iniciarEfectosCarnaval() {
+            const container = document.getElementById('confetti-container');
+            
+            // Crear confeti continuo
+            setInterval(() => {
+                crearConfeti(container);
+            }, 3000);
+            
+            // Efecto inicial
+            setTimeout(() => {
+                mostrarEfectoCarnaval('🎭✨🎪');
+            }, 1000);
+        }
+        
+        function crearConfeti(container) {
+            const tipos = ['papel', 'serpentina', 'estrella'];
+            const colores = ['#FFD700', '#dc2626', '#1e3a8a', '#059669'];
+            
+            for (let i = 0; i < 5; i++) {
+                const confeti = document.createElement('div');
+                confeti.className = `confetti ${tipos[Math.floor(Math.random() * tipos.length)]}`;
+                confeti.style.left = Math.random() * 100 + '%';
+                confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+                confeti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confeti.style.animationDelay = Math.random() * 2 + 's';
                 
-                notification.className = `notification ${colors[type]}`;
-                text.textContent = message;
-                notification.classList.add('show');
+                container.appendChild(confeti);
                 
-                setTimeout(() => notification.classList.remove('show'), duration);
+                // Limpiar después de la animación
+                setTimeout(() => {
+                    if (confeti.parentNode) {
+                        confeti.parentNode.removeChild(confeti);
+                    }
+                }, 5000);
             }
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
-            new CarnivalitoApp();
+        function mostrarEfectoCarnaval(emoji) {
+            const efecto = document.createElement('div');
+            efecto.className = 'efecto-carnaval';
+            efecto.textContent = emoji;
+            document.body.appendChild(efecto);
+            
+            setTimeout(() => {
+                document.body.removeChild(efecto);
+            }, 2000);
+        }
+        
+        // 🎤 CONFIGURACIÓN DE EVENTOS
+        function configurarEventos() {
+            // Enter para enviar
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    enviarMensaje();
+                }
+            });
+            
+            // Botón enviar
+            sendButton.addEventListener('click', enviarMensaje);
+            
+            // Botones de voz
+            document.getElementById('btnJorge').addEventListener('click', () => {
+                vozActual = 'Jorge';
+                mostrarEfectoCarnaval('🎤');
+            });
+            
+            document.getElementById('btnPablo').addEventListener('click', () => {
+                vozActual = 'Pablo';
+                mostrarEfectoCarnaval('🎤');
+            });
+            
+            document.getElementById('btnCantar').addEventListener('click', cantarUltimaRespuesta);
+        }
+        
+        // 🔌 SOCKET CONNECTION
+        function conectarSocket() {
+            socket.on('connect', () => {
+                console.log('🎭 Conectado al Carnavalito');
+            });
+            
+            socket.on('bienvenida', (data) => {
+                console.log('🎉 Bienvenida recibida:', data);
+            });
+            
+            socket.on('nueva_respuesta', (respuesta) => {
+                if (respuesta.cantar) {
+                    setTimeout(() => {
+                        hablarTexto(respuesta.mensaje, respuesta.personalidad);
+                    }, 1000);
+                }
+            });
+        }
+        
+        // 💬 FUNCIONES DE CHAT
+        async function enviarMensaje() {
+            const mensaje = messageInput.value.trim();
+            if (!mensaje) return;
+            
+            // Mostrar mensaje del usuario
+            agregarMensaje(mensaje, 'user');
+            messageInput.value = '';
+            
+            // Mostrar loading
+            mostrarLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: mensaje })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    ultimaRespuesta = data.response;
+                    agregarMensaje(data.response, 'bot');
+                    
+                    // Efectos especiales según el tipo
+                    if (data.data.tipo === 'poesia') {
+                        mostrarEfectoCarnaval('🎵✨📝');
+                        reproducirSonido('audioAplauso');
+                    } else if (data.data.tipo === 'coac') {
+                        mostrarEfectoCarnaval('🏆🎭🎪');
+                    }
+                    
+                    // Hablar si hay personalidad definida
+                    if (data.data.personalidad) {
+                        setTimeout(() => {
+                            hablarTexto(data.response, data.data.personalidad);
+                        }, 500);
+                    }
+                    
+                } else {
+                    agregarMensaje('Lo siento miarma, ha habido un problemilla', 'bot');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                agregarMensaje('No puedo conectar ahora mismo, chiquillo. ¡Prueba en un ratito!', 'bot');
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+        
+        function agregarMensaje(texto, tipo) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${tipo}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = tipo === 'bot' ? '🎭' : '👤';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = texto;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll al final
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function mostrarLoading(mostrar) {
+            loading.classList.toggle('active', mostrar);
+            sendButton.disabled = mostrar;
+        }
+        
+        // 🎵 FUNCIONES DE VOZ
+        async function hablarTexto(texto, personalidad = null) {
+            try {
+                const voz = personalidad?.voz || (vozActual === 'Jorge' ? 'es-ES-Standard-B' : 'es-ES-Standard-D');
+                
+                // Aquí integrarías con Google Text-to-Speech
+                // Por ahora simulamos con Speech Synthesis API del navegador
+                
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(texto);
+                    const voices = speechSynthesis.getVoices();
+                    
+                    // Buscar voz española
+                    const spanishVoice = voices.find(voice => 
+                        voice.lang.includes('es') && voice.name.includes('Google')
+                    ) || voices.find(voice => voice.lang.includes('es'));
+                    
+                    if (spanishVoice) {
+                        utterance.voice = spanishVoice;
+                    }
+                    
+                    utterance.rate = 0.8;  // Más lento para sonar gaditano
+                    utterance.pitch = 0.7; // Más grave
+                    
+                    speechSynthesis.speak(utterance);
+                    
+                    mostrarEfectoCarnaval('🎤🔊');
+                }
+                
+            } catch (error) {
+                console.error('Error hablando:', error);
+            }
+        }
+        
+        function cantarUltimaRespuesta() {
+            if (ultimaRespuesta) {
+                // Convertir texto a "cantado" añadiendo ritmo
+                const textoCantado = ultimaRespuesta.replace(/,/g, ' 🎵,').replace(/\./g, ' 🎶.');
+                hablarTexto(textoCantado);
+                mostrarEfectoCarnaval('🎵🎤🎭');
+            }
+        }
+        
+        // 🎪 FUNCIONES AUXILIARES
+        function enviarMensajeRapido(mensaje) {
+            messageInput.value = mensaje;
+            enviarMensaje();
+        }
+        
+        function enviarPalabraRapida(palabra) {
+            messageInput.value = `¿Qué significa ${palabra}?`;
+            enviarMensaje();
+        }
+        
+        async function trivia() {
+            try {
+                const response = await fetch(`${API_BASE}/api/trivia`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const pregunta = data.trivia;
+                    let mensaje = `🧠 TRIVIA DEL COAC:\n\n${pregunta.pregunta}\n\n`;
+                    pregunta.opciones.forEach((opcion, index) => {
+                        mensaje += `${index + 1}. ${opcion}\n`;
+                    });
+                    
+                    agregarMensaje(mensaje, 'bot');
+                    mostrarEfectoCarnaval('🧠🎭❓');
+                }
+            } catch (error) {
+                console.error('Error en trivia:', error);
+            }
+        }
+        
+        function reproducirSonido(audioId) {
+            try {
+                const audio = document.getElementById(audioId);
+                if (audio) {
+                    audio.currentTime = 0;
+                    audio.play().catch(e => console.log('No se pudo reproducir audio:', e));
+                }
+            } catch (error) {
+                console.log('Error reproduciendo sonido:', error);
+            }
+        }
+        
+        // 🎨 EFECTOS ESPECIALES AL HACER HOVER EN EL ESCUDO
+        document.querySelector('.escudo-hercules').addEventListener('click', () => {
+            mostrarEfectoCarnaval('🦁⚽🏆');
+            reproducirSonido('audioCarnaval');
         });
+        
+        console.log('🎭 ¡Carnavalito Supremo cargado completamente! ¡Viva er Carnaval de Cái!');
     </script>
 </body>
 </html>
